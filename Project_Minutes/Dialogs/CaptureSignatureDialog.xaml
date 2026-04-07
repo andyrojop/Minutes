@@ -1,0 +1,77 @@
+<Window x:Class="Project_Minutes.Dialogs.CaptureSignatureDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Capturar firma"
+        Width="520"
+        Height="420"
+        MinHeight="380"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{StaticResource Brush.Surface}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource Brush.Accent}" Padding="16,12">
+            <Grid>
+                <TextBlock Text="Capturar firma"
+                           Foreground="White"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <Button HorizontalAlignment="Right"
+                        Content="✕"
+                        Style="{StaticResource DialogCloseButton}"
+                        Click="CloseButton_Click" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1"
+                Background="#F1F5F9"
+                BorderBrush="{StaticResource Brush.Border}"
+                BorderThickness="0,0,0,1"
+                Padding="16,10">
+            <Grid>
+                <TextBlock x:Name="DeviceText"
+                           Text="Dispositivo: esperando trazo…"
+                           VerticalAlignment="Center"
+                           Foreground="{StaticResource Brush.Muted}" />
+                <Button HorizontalAlignment="Right"
+                        Content="Limpiar"
+                        Padding="12,6"
+                        Style="{StaticResource SecondaryButton}"
+                        Click="Clear_Click" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2"
+                Margin="16"
+                BorderBrush="{StaticResource Brush.Border}"
+                BorderThickness="1"
+                CornerRadius="6"
+                Background="White">
+            <InkCanvas x:Name="Ink"
+                       Background="White"
+                       PreviewStylusDown="Ink_StylusDown"
+                       PreviewMouseDown="Ink_MouseDown" />
+        </Border>
+
+        <StackPanel Grid.Row="3"
+                    Margin="16,0,16,16"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button Content="Cancelar"
+                    MinWidth="110"
+                    IsCancel="True"
+                    Click="Cancel_Click"
+                    Style="{StaticResource SecondaryButton}" />
+            <Button Content="Guardar firma"
+                    MinWidth="120"
+                    Click="Save_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,57 @@
+<Window x:Class="Project_Minutes.Dialogs.UserManagementDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Personas"
+        Width="520"
+        Height="420"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource Brush.Surface}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource Brush.Accent}" Padding="16,12">
+            <Grid>
+                <TextBlock Text="Gestionar usuarios"
+                           Foreground="White"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <Button HorizontalAlignment="Right"
+                        Content="✕"
+                        Style="{StaticResource DialogCloseButton}"
+                        Click="CloseButton_Click" />
+            </Grid>
+        </Border>
+
+        <DataGrid x:Name="UsersGrid"
+                  Grid.Row="1"
+                  Margin="16,12,16,8"
+                  AutoGenerateColumns="True" />
+
+        <Border Grid.Row="2"
+                Background="{StaticResource Brush.Card}"
+                BorderBrush="{StaticResource Brush.Border}"
+                BorderThickness="0,1,0,0"
+                Padding="16">
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="NameInput"
+                         Width="200"
+                         Margin="0,0,8,0"
+                         ToolTip="Nombre" />
+                <TextBox x:Name="EmailInput"
+                         Width="220"
+                         Margin="0,0,8,0"
+                         ToolTip="Correo (opcional)" />
+                <Button Content="Agregar" Click="Add_Click" />
+                <Button Content="Cerrar"
+                        Margin="12,0,0,0"
+                        Click="CloseOk_Click"
+                        Style="{StaticResource SecondaryButton}" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

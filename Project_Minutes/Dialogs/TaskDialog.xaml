@@ -1,0 +1,52 @@
+<Window x:Class="Project_Minutes.Dialogs.TaskDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nuevo compromiso"
+        Width="420"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{StaticResource Brush.Surface}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource Brush.Accent}" Padding="16,12">
+            <Grid>
+                <TextBlock Text="Nuevo compromiso"
+                           Foreground="White"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <Button HorizontalAlignment="Right"
+                        Content="✕"
+                        Style="{StaticResource DialogCloseButton}"
+                        Click="CloseButton_Click" />
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="1" Margin="20,16,20,20">
+            <TextBlock Text="Minuta" Foreground="{StaticResource Brush.Muted}" Margin="0,0,0,6" />
+            <ComboBox x:Name="MinuteCombo" DisplayMemberPath="DisplayText" Margin="0,0,0,14" />
+
+            <TextBlock Text="Tarea" Foreground="{StaticResource Brush.Muted}" Margin="0,0,0,6" />
+            <TextBox x:Name="TitleInput" Margin="0,0,0,14" />
+
+            <TextBlock Text="Responsable" Foreground="{StaticResource Brush.Muted}" Margin="0,0,0,6" />
+            <ComboBox x:Name="UserCombo" DisplayMemberPath="Name" Margin="0,0,0,14" />
+
+            <TextBlock Text="Fecha límite" Foreground="{StaticResource Brush.Muted}" Margin="0,0,0,6" />
+            <DatePicker x:Name="DuePicker" Margin="0,0,0,16" />
+
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Content="Cancelar"
+                        MinWidth="100"
+                        Click="Cancel_Click"
+                        Style="{StaticResource SecondaryButton}" />
+                <Button Content="Guardar" MinWidth="100" Click="Save_Click" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

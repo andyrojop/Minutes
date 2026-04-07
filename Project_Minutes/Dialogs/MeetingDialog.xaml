@@ -1,0 +1,65 @@
+<Window x:Class="Project_Minutes.Dialogs.MeetingDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Name="Root"
+        Title="Nueva reunión"
+        Width="440"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{StaticResource Brush.Surface}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource Brush.Accent}" Padding="16,12">
+            <Grid>
+                <TextBlock x:Name="HeaderTitleBlock"
+                           Text="Nueva reunión"
+                           Foreground="White"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <Button HorizontalAlignment="Right"
+                        Content="✕"
+                        Style="{StaticResource DialogCloseButton}"
+                        Click="CloseButton_Click" />
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="1" Margin="20,16,20,20">
+            <TextBlock Text="Título" Foreground="{StaticResource Brush.Muted}" Margin="0,0,0,6" />
+            <TextBox x:Name="TitleInput" Margin="0,0,0,16" />
+
+            <TextBlock Text="Fecha y hora" Foreground="{StaticResource Brush.Muted}" Margin="0,0,0,6" />
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="96" />
+                </Grid.ColumnDefinitions>
+                <DatePicker x:Name="DatePickerControl" Grid.Column="0" Margin="0,0,10,0" />
+                <TextBox x:Name="TimeInput"
+                         Grid.Column="1"
+                         VerticalContentAlignment="Center"
+                         ToolTip="Formato 24 h (HH:mm)" />
+            </Grid>
+            <TextBlock Foreground="{StaticResource Brush.Muted}"
+                       FontSize="12"
+                       Text="Ejemplo de hora: 09:30 o 22:12."
+                       Margin="0,0,0,16" />
+
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Content="Cancelar"
+                        MinWidth="100"
+                        Click="Cancel_Click"
+                        Style="{StaticResource SecondaryButton}" />
+                <Button Content="Guardar"
+                        MinWidth="100"
+                        Click="Save_Click"
+                        Style="{StaticResource DialogPrimaryButton}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

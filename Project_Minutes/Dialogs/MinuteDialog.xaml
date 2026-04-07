@@ -1,0 +1,148 @@
+<Window x:Class="Project_Minutes.Dialogs.MinuteDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nueva minuta"
+        Width="560"
+        Height="720"
+        MinHeight="620"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="{StaticResource Brush.Surface}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource Brush.Accent}" Padding="16,12">
+            <Grid>
+                <TextBlock x:Name="HeaderTitleBlock"
+                           Text="Nueva minuta"
+                           Foreground="White"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <Button HorizontalAlignment="Right"
+                        Content="✕"
+                        Style="{StaticResource DialogCloseButton}"
+                        Click="CloseButton_Click" />
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" Padding="20,16,20,20" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Reunión" Foreground="{StaticResource Brush.Muted}" Margin="0,0,0,6" />
+                <ComboBox x:Name="MeetingCombo"
+                          DisplayMemberPath="DisplayText"
+                          SelectionChanged="MeetingCombo_SelectionChanged"
+                          Margin="0,0,0,16" />
+
+                <TextBlock Text="Título" Foreground="{StaticResource Brush.Muted}" Margin="0,0,0,6" />
+                <TextBox x:Name="TitleInput" Margin="0,0,0,16" />
+
+                <TextBlock Text="Contenido" Foreground="{StaticResource Brush.Muted}" Margin="0,0,0,6" />
+                <TextBox x:Name="BodyInput"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         MinHeight="120"
+                         VerticalScrollBarVisibility="Auto"
+                         Margin="0,0,0,20" />
+
+                <TextBlock Text="Asistentes (firman la minuta)"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,6" />
+                <TextBlock TextWrapping="Wrap"
+                           FontSize="12"
+                           Foreground="{StaticResource Brush.Muted}"
+                           Margin="0,0,0,10"
+                           Text="Cada participante de la reunión debe aparecer aquí. Regístralos en la pestaña Participantes y captura la firma de cada uno." />
+
+                <ItemsControl x:Name="AttendeesItems" Margin="0,0,0,8">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,0,10"
+                                    Padding="12"
+                                    Background="{StaticResource Brush.Card}"
+                                    BorderBrush="{StaticResource Brush.Border}"
+                                    BorderThickness="1"
+                                    CornerRadius="10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="140" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Grid.Row="0" Grid.Column="0">
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontWeight="SemiBold"
+                                                   FontSize="14" />
+                                        <TextBlock Text="{Binding StatusText}"
+                                                   Foreground="{StaticResource Brush.Muted}"
+                                                   FontSize="12"
+                                                   Margin="0,4,0,0" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="0"
+                                                Grid.Column="1"
+                                                VerticalAlignment="Top"
+                                                Orientation="Vertical"
+                                                HorizontalAlignment="Right">
+                                        <Button Content="Capturar firma"
+                                                Margin="0,0,0,6"
+                                                Padding="10,6"
+                                                Tag="{Binding UserId}"
+                                                Click="CaptureAttendee_Click" />
+                                        <Button Content="Quitar firma"
+                                                Style="{StaticResource SecondaryButton}"
+                                                Padding="10,6"
+                                                Tag="{Binding UserId}"
+                                                Click="RemoveAttendee_Click" />
+                                        <Button Content="Quitar de reunión"
+                                                Style="{StaticResource SecondaryButton}"
+                                                Margin="0,8,0,0"
+                                                Padding="8,6"
+                                                FontSize="11"
+                                                Tag="{Binding UserId}"
+                                                Click="RemoveFromMeeting_Click" />
+                                    </StackPanel>
+
+                                    <Border Grid.Row="1"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2"
+                                            Margin="0,10,0,0"
+                                            Height="72"
+                                            BorderBrush="{StaticResource Brush.Border}"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Background="#FAFAFA">
+                                        <Image Source="{Binding Preview}"
+                                               Stretch="Uniform"
+                                               Margin="6"
+                                               RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <StackPanel Margin="0,20,0,0"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                    <Button Content="Cancelar"
+                            MinWidth="100"
+                            Click="Cancel_Click"
+                            Style="{StaticResource SecondaryButton}" />
+                    <Button Content="Guardar"
+                            MinWidth="100"
+                            Click="Save_Click" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
