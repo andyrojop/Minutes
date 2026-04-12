@@ -3,7 +3,7 @@ using System.Windows.Threading;
 
 namespace Project_Minutes;
 
-public partial class App : Application
+public partial class App : WpfApplication
 {
     protected override void OnStartup(StartupEventArgs e)
     {

@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>Project_Minutes</RootNamespace>
     <AssemblyName>Project_Minutes</AssemblyName>
   </PropertyGroup>
@@ -18,6 +19,13 @@
 
   <ItemGroup>
     <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- Si existe Lib\SigPlusNET.dll (SDK Topaz .NET), se copia al directorio de salida. -->
+  <ItemGroup Condition="Exists('Lib\SigPlusNET.dll')">
+    <None Include="Lib\SigPlusNET.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

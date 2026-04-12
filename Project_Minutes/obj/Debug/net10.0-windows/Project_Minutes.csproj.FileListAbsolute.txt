@@ -86,3 +86,4 @@ C:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Proje
 C:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\Project_Minutes\obj\Debug\net10.0-windows\Project_Minutes_MarkupCompile.lref
 C:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\Project_Minutes\obj\Debug\net10.0-windows\Dialogs\TaskSignDialog.baml
 C:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\Project_Minutes\obj\Debug\net10.0-windows\Dialogs\TaskSignDialog.g.cs
+C:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\Project_Minutes\obj\Debug\net10.0-windows\Project_Minutes.sourcelink.json
