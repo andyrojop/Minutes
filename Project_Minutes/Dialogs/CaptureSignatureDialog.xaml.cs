@@ -11,7 +11,7 @@ public partial class CaptureSignatureDialog : Window
 {
     public byte[]? SignaturePng { get; private set; }
 
-    private readonly SignaturePadOptions _padOptions = AppConfiguration.Load().SignaturePad;
+    private readonly SignaturePadOptions _padOptions = ClientConfiguration.Load().SignaturePad;
     private object? _sigPlus;
     private bool _topazListening;
     private byte[]? _topazPng;

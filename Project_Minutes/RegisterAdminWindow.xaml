@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="Project_Minutes.RegisterAdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Registrar administrador"
+        Width="440"
+        SizeToContent="Height"
+        MinHeight="420"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{StaticResource Brush.Surface}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource Brush.Accent}" Padding="16,12">
+            <Grid>
+                <TextBlock x:Name="HeaderText"
+                           Text="Nuevo administrador"
+                           Foreground="White"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <Button HorizontalAlignment="Right"
+                        Content="✕"
+                        Style="{StaticResource DialogCloseButton}"
+                        Click="CancelButton_Click" />
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="1" Margin="20,16,20,16">
+            <TextBlock Text="Nombre para mostrar"
+                       FontSize="12"
+                       Foreground="{StaticResource Brush.Muted}"
+                       Margin="0,0,0,4" />
+            <TextBox x:Name="DisplayNameBox"
+                     Padding="8,6"
+                     MinHeight="32"
+                     VerticalContentAlignment="Center" />
+            <TextBlock Text="Correo (opcional)"
+                       FontSize="12"
+                       Foreground="{StaticResource Brush.Muted}"
+                       Margin="0,10,0,4" />
+            <TextBox x:Name="EmailBox"
+                     Padding="8,6"
+                     MinHeight="32"
+                     VerticalContentAlignment="Center" />
+            <TextBlock Text="Usuario (sin espacios)"
+                       FontSize="12"
+                       Foreground="{StaticResource Brush.Muted}"
+                       Margin="0,10,0,4" />
+            <TextBox x:Name="UsernameBox"
+                     Padding="8,6"
+                     MinHeight="32"
+                     VerticalContentAlignment="Center" />
+            <TextBlock Text="Contraseña"
+                       FontSize="12"
+                       Foreground="{StaticResource Brush.Muted}"
+                       Margin="0,10,0,4" />
+            <PasswordBox x:Name="PasswordBox"
+                         Padding="8,6"
+                         MinHeight="32"
+                         VerticalContentAlignment="Center" />
+            <TextBlock Text="Confirmar contraseña"
+                       FontSize="12"
+                       Foreground="{StaticResource Brush.Muted}"
+                       Margin="0,10,0,4" />
+            <PasswordBox x:Name="ConfirmPasswordBox"
+                         Padding="8,6"
+                         MinHeight="32"
+                         VerticalContentAlignment="Center" />
+            <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
+                <Button x:Name="OkButton"
+                        Content="Registrar"
+                        IsDefault="True"
+                        Click="OkButton_Click"
+                        Style="{StaticResource OutlineAccentButton}" />
+                <Button Content="Cancelar"
+                        Margin="10,0,0,0"
+                        Click="CancelButton_Click"
+                        Style="{StaticResource SecondaryButton}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

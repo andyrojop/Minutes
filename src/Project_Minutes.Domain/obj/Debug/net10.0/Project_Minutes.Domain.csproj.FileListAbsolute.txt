@@ -1,0 +1,12 @@
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\obj\Debug\net10.0\Project_Minutes.Domain.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\obj\Debug\net10.0\Project_Minutes.Domain.AssemblyInfoInputs.cache
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\obj\Debug\net10.0\Project_Minutes.Domain.AssemblyInfo.cs
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\obj\Debug\net10.0\Project_Minutes.Domain.csproj.CoreCompileInputs.cache
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\obj\Debug\net10.0\Project_Minutes.Domain.sourcelink.json
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\bin\Debug\net10.0\Project_Minutes.Domain.deps.json
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\bin\Debug\net10.0\Project_Minutes.Domain.dll
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\bin\Debug\net10.0\Project_Minutes.Domain.pdb
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\obj\Debug\net10.0\Project_Minutes.Domain.dll
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\obj\Debug\net10.0\refint\Project_Minutes.Domain.dll
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\obj\Debug\net10.0\Project_Minutes.Domain.pdb
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Domain\obj\Debug\net10.0\ref\Project_Minutes.Domain.dll

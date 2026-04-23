@@ -10,12 +10,19 @@ public partial class TaskDialog : Window
     public int? ResponsibleUserId { get; private set; }
     public DateTime? DueDate { get; private set; }
 
-    public TaskDialog(IReadOnlyList<MinutePickItem> minutes, IReadOnlyList<UserRecord> users)
+    public TaskDialog(IReadOnlyList<MinutePickItem> minutes, IReadOnlyList<UserRecord> users, int? preselectMinuteId = null)
     {
         InitializeComponent();
         MinuteCombo.ItemsSource = minutes;
         UserCombo.ItemsSource = users;
-        if (MinuteCombo.Items.Count > 0)
+        if (preselectMinuteId is { } id)
+        {
+            var match = minutes.FirstOrDefault(m => m.MinuteId == id);
+            if (match is not null)
+                MinuteCombo.SelectedItem = match;
+        }
+
+        if (MinuteCombo.SelectedItem is null && MinuteCombo.Items.Count > 0)
             MinuteCombo.SelectedIndex = 0;
         if (UserCombo.Items.Count > 0)
             UserCombo.SelectedIndex = 0;

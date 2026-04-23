@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NET10_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 C:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\Project_Minutes\App.xaml
-9-518440220
+11-531221420
 
-331434735896
-2401084314267
-Dialogs\CaptureSignatureDialog.xaml;Dialogs\MeetingDialog.xaml;Dialogs\MinuteDialog.xaml;Dialogs\TaskDialog.xaml;Dialogs\TaskSignDialog.xaml;Dialogs\UserManagementDialog.xaml;MainWindow.xaml;Themes\AppTheme.xaml;Themes\DialogStyles.xaml;
+25-1184314359
+224-2097362434
+Dialogs\CaptureSignatureDialog.xaml;Dialogs\MeetingDialog.xaml;Dialogs\MinuteDialog.xaml;Dialogs\TaskDialog.xaml;Dialogs\TaskSignDialog.xaml;Dialogs\UserManagementDialog.xaml;LoginWindow.xaml;MainWindow.xaml;RegisterAdminWindow.xaml;Themes\AppTheme.xaml;Themes\DialogStyles.xaml;
 
 False
 

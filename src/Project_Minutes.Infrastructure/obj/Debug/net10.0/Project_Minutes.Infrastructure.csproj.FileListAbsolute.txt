@@ -1,0 +1,16 @@
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\bin\Debug\net10.0\Project_Minutes.Infrastructure.deps.json
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\bin\Debug\net10.0\Project_Minutes.Infrastructure.dll
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\bin\Debug\net10.0\Project_Minutes.Infrastructure.pdb
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\bin\Debug\net10.0\Project_Minutes.Domain.dll
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\bin\Debug\net10.0\Project_Minutes.Domain.pdb
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\Project_Minutes.Infrastructure.csproj.AssemblyReference.cache
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\Project_Minutes.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\Project_Minutes.Infrastructure.AssemblyInfoInputs.cache
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\Project_Minutes.Infrastructure.AssemblyInfo.cs
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\Project_Minutes.Infrastructure.csproj.CoreCompileInputs.cache
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\Project_Minutes.Infrastructure.sourcelink.json
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\Project_.272EC6F8.Up2Date
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\Project_Minutes.Infrastructure.dll
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\refint\Project_Minutes.Infrastructure.dll
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\Project_Minutes.Infrastructure.pdb
+c:\Users\andyr\OneDrive\Documentos\Noveno Semestre\Inteligencia Artificial\Project_Minutes\src\Project_Minutes.Infrastructure\obj\Debug\net10.0\ref\Project_Minutes.Infrastructure.dll

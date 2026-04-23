@@ -1,7 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using Project_Minutes.Configuration;
-using Project_Minutes.Data;
 using Project_Minutes.Dialogs;
 using Project_Minutes.Helpers;
 using Project_Minutes.Models;
@@ -23,20 +22,20 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        var appConfig = AppConfiguration.Load();
-        var db = new SqlDatabase(appConfig);
-        _users = new UserRepository(db);
-        _meetings = new MeetingRepository(db);
-        _minutes = new MinuteRepository(db);
-        _tasks = new TaskRepository(db);
-        _signatures = new SignatureRepository(db);
-        _participants = new ParticipantRepository(db);
-        _taskSignatures = new TaskSignatureRepository(db);
+        _ = ClientConfiguration.Load();
+        _users = new UserRepository();
+        _meetings = new MeetingRepository();
+        _minutes = new MinuteRepository();
+        _tasks = new TaskRepository();
+        _signatures = new SignatureRepository();
+        _participants = new ParticipantRepository();
+        _taskSignatures = new TaskSignatureRepository();
 
         Loaded += async (_, _) =>
         {
             try
             {
+                UpdateSessionUi();
                 await OnLoadedAsync().ConfigureAwait(true);
             }
             catch (Exception ex)
@@ -44,6 +43,56 @@ public partial class MainWindow : Window
                 MessageBox.Show(this, ex.ToString(), "Error al iniciar", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         };
+    }
+
+    private void UpdateSessionUi()
+    {
+        var u = AuthSession.Current;
+        SessionUserText.Text = u is null
+            ? "Administrador: —"
+            : $"Administrador: {u.DisplayName} ({u.Username})";
+    }
+
+    private void MenuRegisterAdmin_Click(object sender, RoutedEventArgs e)
+    {
+        if (!AuthSession.IsAdministratorLoggedIn)
+        {
+            MessageBox.Show(this, "No hay una sesión de administrador activa.", "Registrar administrador",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        try
+        {
+            var dlg = new RegisterAdminWindow(_users, firstAdministratorOnly: false) { Owner = this };
+            if (dlg.ShowDialog() == true)
+                MessageBox.Show(this, "Se registró el nuevo administrador.", "Registrar administrador",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, ex.Message, "Registrar administrador", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void MenuLogout_Click(object sender, RoutedEventArgs e)
+    {
+        AuthSession.Clear();
+        UpdateSessionUi();
+        Hide();
+
+        var login = new LoginWindow();
+        if (login.ShowDialog() == true)
+        {
+            UpdateSessionUi();
+            Show();
+            _ = RefreshAllAsync();
+        }
+        else
+        {
+            Close();
+            WpfApplication.Current.Shutdown();
+        }
     }
 
     private async Task OnLoadedAsync()
@@ -54,20 +103,18 @@ public partial class MainWindow : Window
         await RefreshAllAsync().ConfigureAwait(true);
     }
 
-    /// <summary>Crea TaskSignatures (y el índice de firmas por minuta/usuario) si aún no existen.</summary>
+    /// <summary>Indica al backend que aplique el esquema SQL si hace falta.</summary>
     private async Task EnsureDatabaseSchemaAsync()
     {
         try
         {
-            var cfg = AppConfiguration.Load();
-            await using var c = new Microsoft.Data.SqlClient.SqlConnection(cfg.MeetingMinutesConnectionString);
-            await c.OpenAsync().ConfigureAwait(true);
-            await DatabaseSchemaInitializer.EnsureExtendedSchemaAsync(c).ConfigureAwait(true);
+            var res = await ApiHttp.Instance.GetAsync("api/health/ready").ConfigureAwait(true);
+            res.EnsureSuccessStatusCode();
         }
         catch (Exception ex)
         {
             MessageBox.Show(this,
-                "La app funcionará con limitaciones hasta que la base permita crear la tabla TaskSignatures.\n\n" +
+                "No se pudo preparar la base de datos vía API. Compruebe que el backend esté en ejecución y la cadena de conexión del servidor.\n\n" +
                 ex.Message,
                 "Esquema de base de datos",
                 MessageBoxButton.OK,
@@ -105,21 +152,21 @@ public partial class MainWindow : Window
 
     private async Task<bool> TestConnectionAsync()
     {
-        StatusText.Text = "Comprobando conexión con SQL Server…";
+        var api = ClientConfiguration.Load().ApiBaseUrl;
+        StatusText.Text = "Comprobando conexión con la API…";
         DataPathText.Text = "Datos guardados en: —";
         try
         {
-            var cfg = AppConfiguration.Load();
-            await using var c = new Microsoft.Data.SqlClient.SqlConnection(cfg.MeetingMinutesConnectionString);
-            await c.OpenAsync().ConfigureAwait(true);
-            StatusText.Text = $"Conectado a «{c.Database}» en {c.DataSource}.";
-            DataPathText.Text = $"Datos guardados en: SQL Server · {c.Database} · {c.DataSource}";
+            var res = await ApiHttp.Instance.GetAsync("api/health").ConfigureAwait(true);
+            res.EnsureSuccessStatusCode();
+            StatusText.Text = "Conectado al backend REST.";
+            DataPathText.Text = $"API: {api.TrimEnd('/')} (SQL en el servidor)";
             return true;
         }
         catch (Exception ex)
         {
-            StatusText.Text = "Sin conexión. Revisa appsettings.json.";
-            DataPathText.Text = "Datos guardados en: (no conectado)";
+            StatusText.Text = "Sin conexión al backend. Inicie la API y revise Api:BaseUrl.";
+            DataPathText.Text = "Datos: (API no disponible)";
             MessageBox.Show(this, ex.Message, "Error de conexión", MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
@@ -130,11 +177,8 @@ public partial class MainWindow : Window
         try
         {
             await RefreshMeetingsUiAsync().ConfigureAwait(true);
-            await RefreshParticipantMeetingsComboAsync().ConfigureAwait(true);
-            await RefreshParticipantsListAsync().ConfigureAwait(true);
             await PopulateMinuteFilterAsync().ConfigureAwait(true);
             await RefreshMinutesUiAsync().ConfigureAwait(true);
-            await PopulateTaskMinuteComboAsync().ConfigureAwait(true);
         }
         catch (Exception ex)
         {
@@ -144,62 +188,52 @@ public partial class MainWindow : Window
 
     private async Task RefreshMeetingsUiAsync()
     {
+        var prevId = MeetingsList.SelectedItem is MeetingRow mr ? mr.Record.MeetingId : (int?)null;
         var list = await _meetings.GetAllAsync().ConfigureAwait(true);
-        MeetingsList.ItemsSource = list.Select(m => new MeetingRow
+        var rows = list.Select(m => new MeetingRow
         {
             Record = m,
             Line = $"{(string.IsNullOrWhiteSpace(m.Title) ? "Reunión" : m.Title.Trim())} — {m.MeetingDate:d} {TimeParse.FormatHhMm(m.MeetingTime)}"
         }).ToList();
-    }
 
-    private async Task RefreshParticipantMeetingsComboAsync()
-    {
-        var list = await _meetings.GetAllAsync().ConfigureAwait(true);
-        var items = list.Select(m => new MeetingPickItem
+        MeetingsList.ItemsSource = rows;
+
+        if (rows.Count == 0)
         {
-            MeetingId = m.MeetingId,
-            DisplayText =
-                $"{(string.IsNullOrWhiteSpace(m.Title) ? "Reunión" : m.Title.Trim())} — {m.MeetingDate:d} {TimeParse.FormatHhMm(m.MeetingTime)}"
-        }).ToList();
-
-        var prevId = ParticipantMeetingCombo.SelectedItem is MeetingPickItem p ? p.MeetingId : (int?)null;
-        ParticipantMeetingCombo.ItemsSource = items;
-
-        if (items.Count == 0)
-        {
+            MeetingsList.SelectedItem = null;
+            UpdateMeetingContextHeader();
             ParticipantsList.ItemsSource = Array.Empty<ParticipantRecord>();
             return;
         }
 
-        if (prevId is { } id)
-        {
-            var match = items.FirstOrDefault(x => x.MeetingId == id);
-            if (match is not null)
-            {
-                ParticipantMeetingCombo.SelectedItem = match;
-                return;
-            }
-        }
-
-        ParticipantMeetingCombo.SelectedIndex = 0;
+        var pick = prevId is { } id ? rows.FirstOrDefault(r => r.Record.MeetingId == id) : null;
+        pick ??= rows[0];
+        MeetingsList.SelectedItem = pick;
     }
 
-    private async Task RefreshParticipantsListAsync()
+    private void UpdateMeetingContextHeader()
     {
-        if (ParticipantMeetingCombo.SelectedItem is not MeetingPickItem mp)
+        if (MeetingsList.SelectedItem is MeetingRow row)
         {
-            ParticipantsList.ItemsSource = Array.Empty<ParticipantRecord>();
-            return;
+            MeetingContextTitle.Text = row.Line;
+            MeetingContextSubtitle.Text = "Participantes que pueden firmar la minuta de esta reunión.";
         }
-
-        var parts = await _participants.GetByMeetingAsync(mp.MeetingId).ConfigureAwait(true);
-        ParticipantsList.ItemsSource = parts;
+        else
+        {
+            MeetingContextTitle.Text = MeetingsList.Items.Count == 0
+                ? "No hay reuniones"
+                : "Selecciona una reunión";
+            MeetingContextSubtitle.Text = MeetingsList.Items.Count == 0
+                ? "Crea una reunión desde el panel izquierdo para comenzar."
+                : "Elige una fila en la lista de reuniones.";
+        }
     }
 
-    private async void ParticipantMeetingCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private async void MeetingsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (!IsLoaded)
             return;
+        UpdateMeetingContextHeader();
         try
         {
             await RefreshParticipantsListAsync().ConfigureAwait(true);
@@ -210,11 +244,23 @@ public partial class MainWindow : Window
         }
     }
 
+    private async Task RefreshParticipantsListAsync()
+    {
+        if (MeetingsList.SelectedItem is not MeetingRow row)
+        {
+            ParticipantsList.ItemsSource = Array.Empty<ParticipantRecord>();
+            return;
+        }
+
+        var parts = await _participants.GetByMeetingAsync(row.Record.MeetingId).ConfigureAwait(true);
+        ParticipantsList.ItemsSource = parts;
+    }
+
     private async void RegisterNewParticipant_Click(object sender, RoutedEventArgs e)
     {
-        if (ParticipantMeetingCombo.SelectedItem is not MeetingPickItem mp)
+        if (MeetingsList.SelectedItem is not MeetingRow meetingRow)
         {
-            MessageBox.Show(this, "Elige una reunión.", "Participantes", MessageBoxButton.OK,
+            MessageBox.Show(this, "Selecciona una reunión en la lista.", "Participantes", MessageBoxButton.OK,
                 MessageBoxImage.Information);
             return;
         }
@@ -233,7 +279,7 @@ public partial class MainWindow : Window
         try
         {
             var userId = await _users.AddAsync(name, null).ConfigureAwait(true);
-            await _participants.AddIfNotExistsAsync(mp.MeetingId, userId, position).ConfigureAwait(true);
+            await _participants.AddIfNotExistsAsync(meetingRow.Record.MeetingId, userId, position).ConfigureAwait(true);
             NewParticipantNameBox.Clear();
             NewParticipantPositionBox.Clear();
             await RefreshParticipantsListAsync().ConfigureAwait(true);
@@ -246,7 +292,7 @@ public partial class MainWindow : Window
 
     private async void RemoveParticipant_Click(object sender, RoutedEventArgs e)
     {
-        if (ParticipantMeetingCombo.SelectedItem is not MeetingPickItem mp)
+        if (MeetingsList.SelectedItem is not MeetingRow meetingRow)
             return;
 
         if (ParticipantsList.SelectedItem is not ParticipantRecord row)
@@ -262,7 +308,7 @@ public partial class MainWindow : Window
 
         try
         {
-            await _participants.RemoveAsync(mp.MeetingId, row.UserId).ConfigureAwait(true);
+            await _participants.RemoveAsync(meetingRow.Record.MeetingId, row.UserId).ConfigureAwait(true);
             await RefreshParticipantsListAsync().ConfigureAwait(true);
         }
         catch (Exception ex)
@@ -299,50 +345,57 @@ public partial class MainWindow : Window
     private async Task RefreshMinutesUiAsync()
     {
         var filter = GetSelectedFilterMeetingId();
+        var prevMinuteId = MinutesList.SelectedItem is MinuteListItem mi ? mi.MinuteId : (int?)null;
         var items = await _minutes.GetListItemsAsync(filter).ConfigureAwait(true);
         MinutesList.ItemsSource = items;
-    }
 
-    private async Task PopulateTaskMinuteComboAsync()
-    {
-        var list = await _minutes.GetAllAsync().ConfigureAwait(true);
-        var opts = list.Select(m => new MinutePickItem
+        if (items.Count == 0)
         {
-            MinuteId = m.MinuteId,
-            DisplayText = $"{m.MeetingTitle} — minuta #{m.MinuteId}"
-        }).ToList();
-        TaskMinuteCombo.ItemsSource = opts;
-        if (TaskMinuteCombo.Items.Count > 0)
-            TaskMinuteCombo.SelectedIndex = 0;
-        await RefreshTasksForSelectedMinuteAsync().ConfigureAwait(true);
-    }
-
-    private async Task RefreshTasksForSelectedMinuteAsync()
-    {
-        if (TaskMinuteCombo.SelectedItem is not MinutePickItem opt)
-        {
+            MinutesList.SelectedItem = null;
+            UpdateMinuteContextHeader();
             TasksList.ItemsSource = Array.Empty<TaskRecord>();
             return;
         }
 
-        var tasks = await _tasks.GetByMinuteIdAsync(opt.MinuteId).ConfigureAwait(true);
-        TasksList.ItemsSource = tasks;
+        var pick = prevMinuteId is { } mid ? items.FirstOrDefault(x => x.MinuteId == mid) : null;
+        pick ??= items[0];
+        MinutesList.SelectedItem = pick;
     }
 
-    private async void MinuteFilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void UpdateMinuteContextHeader()
     {
-        try
+        if (MinutesList.SelectedItem is MinuteListItem m)
         {
-            await RefreshMinutesUiAsync().ConfigureAwait(true);
+            var preview = MinuteListItem.ExtractTitlePreview(m.Content);
+            MinuteContextTitle.Text = $"{preview} · Minuta #{m.MinuteId}";
+            var meetingLabel = string.IsNullOrWhiteSpace(m.MeetingTitle)
+                ? $"Reunión #{m.MeetingId}"
+                : m.MeetingTitle.Trim();
+            if (m.ParticipantCount == 0)
+                MinuteContextSubtitle.Text = $"{meetingLabel} · Sin participantes en la reunión";
+            else if (m.SignatureCount >= m.ParticipantCount)
+                MinuteContextSubtitle.Text =
+                    $"{meetingLabel} · Firmas completas ({m.SignatureCount}/{m.ParticipantCount})";
+            else
+                MinuteContextSubtitle.Text =
+                    $"{meetingLabel} · Firmas {m.SignatureCount}/{m.ParticipantCount} asistentes";
         }
-        catch (Exception ex)
+        else
         {
-            MessageBox.Show(this, ex.Message, "Minutas", MessageBoxButton.OK, MessageBoxImage.Error);
+            MinuteContextTitle.Text = MinutesList.Items.Count == 0
+                ? "No hay minutas"
+                : "Selecciona una minuta";
+            MinuteContextSubtitle.Text = MinutesList.Items.Count == 0
+                ? "Cambia el filtro de reunión o crea una minuta nueva."
+                : "Elige una fila en la lista de la izquierda.";
         }
     }
 
-    private async void TaskMinuteCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private async void MinutesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (!IsLoaded)
+            return;
+        UpdateMinuteContextHeader();
         try
         {
             await RefreshTasksForSelectedMinuteAsync().ConfigureAwait(true);
@@ -350,6 +403,32 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             MessageBox.Show(this, ex.Message, "Compromisos", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private async Task RefreshTasksForSelectedMinuteAsync()
+    {
+        if (MinutesList.SelectedItem is not MinuteListItem item)
+        {
+            TasksList.ItemsSource = Array.Empty<TaskRecord>();
+            return;
+        }
+
+        var tasks = await _tasks.GetByMinuteIdAsync(item.MinuteId).ConfigureAwait(true);
+        TasksList.ItemsSource = tasks;
+    }
+
+    private async void MinuteFilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!IsLoaded)
+            return;
+        try
+        {
+            await RefreshMinutesUiAsync().ConfigureAwait(true);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, ex.Message, "Minutas", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -533,7 +612,8 @@ public partial class MainWindow : Window
             DisplayText = $"{m.MeetingTitle} — #{m.MinuteId}"
         }).ToList();
 
-        var dlg = new TaskDialog(minuteItems, users) { Owner = this };
+        var preMinute = MinutesList.SelectedItem is MinuteListItem sel ? sel.MinuteId : (int?)null;
+        var dlg = new TaskDialog(minuteItems, users, preMinute) { Owner = this };
         if (dlg.ShowDialog() != true)
             return;
 
